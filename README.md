@@ -1,4 +1,4 @@
-# migrate_iobroker_mysql_to_influxdb
+# Migrate ioBroker logging from MySQL to influxDB
 Python script to migrate ioBroker MySQL (SQL History Adapter) data to influxDB (Logging data with influxDB)
 
 Based on a script from UlliJ from the [ioBroker Forum](https://forum.iobroker.net/topic/12482/frage-migrate-mysql-nach-influxdb/26)
