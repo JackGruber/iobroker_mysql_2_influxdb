@@ -123,7 +123,7 @@ def migrate_datapoints(table):
         
     return migrated_datapoints
 
-MYSQL_CURSOR = MYSQL_CONNECTION.cursor(cursorclass=MySQLdb.cursors.DictCursor) 
+MYSQL_CURSOR = MYSQL_CONNECTION.cursor(cursor=pymysql.cursors.DictCursor) 
 migrated = 0
 migrated += migrate_datapoints("ts_number")
 migrated += migrate_datapoints("ts_bool")
