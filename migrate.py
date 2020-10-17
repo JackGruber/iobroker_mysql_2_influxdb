@@ -18,10 +18,10 @@ db = json.loads(db)
 
 try:
     MYSQL_CONNECTION = pymysql.connect(host = db['MySQL']['host'],
-                                   port = db['MySQL']['port'],
+                                    port = db['MySQL']['port'],
                                     user = db['MySQL']['user'],
                                     password = db['MySQL']['password'],
-                                   db = db['MySQL']['database'])
+                                    db = db['MySQL']['database'])
 except pymysql.OperationalError as error:
     print (error)
     sys.exit(1)
@@ -46,7 +46,6 @@ SCHEMA = {
     "table_name_to_measurement" : "name", # table name that will be mapped to measurement
     }
 
- 
 
 #####
 #Generates an collection of influxdb points from the given SQL records
@@ -115,7 +114,14 @@ def migrate_datapoints(table):
                 
                 print(f"Processing row {processed_rows + 1:,} to {processed_rows + len(selected_rows):,} from LIMIT {start_row:,} / {start_row + query_max_rows:,} " + table + " - " + metric['name'] + " (" + str(metric_nr) + "/" + str(metric_count) + ")")
                 migrated_datapoints += len(selected_rows)
-                INFLUXDB_CONNECTION.write_points(generate_influx_points(selected_rows))
+
+                try:
+                    INFLUXDB_CONNECTION.write_points(generate_influx_points(selected_rows))
+                except Exception as ex:
+                    print("InfluxDB error")
+                    print(ex)
+                    sys.exit(1)               
+                
                 processed_rows += len(selected_rows)
                 
             start_row += query_max_rows
