@@ -1,22 +1,36 @@
+import json
+import os
+import sys
+
+# Load DB Settings
+database_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "database.json")
+if not os.path.exists(database_file):
+    print("Please rename database.json.example to database.json")
+    sys.exit(1)
+
+f = open(database_file, 'r')
+db = f.read()
+f.close()
+db = json.loads(db)
+print(db)
+
 ### MySQL DB info ###
 import MySQLdb
-MYSQL_CONNECTION = MySQLdb.connect(host="xxxxxxxxxxxxxxxxxxxxxx",  # your host
-                                   port = 3306,                    # your DB port
-                                   user="xxxx",                    # your username
-                                   passwd="xxxxxxxxxxxxxxxxxxxx",  # your password
-                                   db="xxxxxxxx")                  # name of the database
- 
+MYSQL_CONNECTION = MySQLdb.connect(host = db['MySQL']['host'],
+                                   port = db['MySQL']['port'],
+                                   use = db['MySQL']['user'],
+                                   passwd = db['MySQL']['password'],
+                                   db = db['MySQL']['database'])
+
 
 # InfluxDB info #
 from influxdb import InfluxDBClient
-INFLUXDB_CONNECTION = InfluxDBClient(host='xxxxxxxxxxxxxxxxxxxxxx', # your host
-                                     port=8086,                     # your DB port
-                                     username='xxxxxxxx',           # your username
-                                     password='xxxxxxxxxxxxxxxx',   # your password
-                                     database='xxxxxxxx')           # name of the database
+INFLUXDB_CONNECTION = InfluxDBClient(host = db['InfluxDB']['host'],
+                                     port = db['InfluxDB']['port'],
+                                     username = db['InfluxDB']['user'],
+                                     password = db['InfluxDB']['password'],
+                                     database = db['InfluxDB']['database'])
 #####
-
-
 
 import time
 

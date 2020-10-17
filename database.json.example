@@ -1,0 +1,16 @@
+{
+  "MySQL": {
+    "host": "localhost",
+    "port": "3306",
+    "database": "iobroker",
+    "user": "xxxx",
+    "password": "xxxx"
+  },
+  "InfluxDB": {
+    "host": "localhost",
+    "port": "8086",
+    "database": "iobroker",
+    "user": "xxxx",
+    "password": "xxxx"
+  }
+}
