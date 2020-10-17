@@ -11,6 +11,7 @@
     "ssl": false,
     "port": 8086,
     "database": "iobroker",
+    "retention_policy": "autogen",
     "user": "xxxx",
     "password": "xxxx"
   }

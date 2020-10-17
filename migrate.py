@@ -131,7 +131,7 @@ def migrate_datapoints(table):
                 migrated_datapoints += len(selected_rows)
 
                 try:
-                    INFLUXDB_CONNECTION.write_points(generate_influx_points(selected_rows))
+                    INFLUXDB_CONNECTION.write_points(generate_influx_points(selected_rows),retention_policy=db['InfluxDB']['retention_policy'])
                 except Exception as ex:
                     print("InfluxDB error")
                     print(ex)
