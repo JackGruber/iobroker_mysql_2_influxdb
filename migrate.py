@@ -1,6 +1,9 @@
 import json
 import os
 import sys
+import time
+from influxdb import InfluxDBClient
+import MySQLdb
 
 # Load DB Settings
 database_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "database.json")
@@ -14,8 +17,6 @@ f.close()
 db = json.loads(db)
 print(db)
 
-### MySQL DB info ###
-import MySQLdb
 MYSQL_CONNECTION = MySQLdb.connect(host = db['MySQL']['host'],
                                    port = db['MySQL']['port'],
                                    use = db['MySQL']['user'],
@@ -23,16 +24,12 @@ MYSQL_CONNECTION = MySQLdb.connect(host = db['MySQL']['host'],
                                    db = db['MySQL']['database'])
 
 
-# InfluxDB info #
-from influxdb import InfluxDBClient
 INFLUXDB_CONNECTION = InfluxDBClient(host = db['InfluxDB']['host'],
                                      port = db['InfluxDB']['port'],
                                      username = db['InfluxDB']['user'],
                                      password = db['InfluxDB']['password'],
                                      database = db['InfluxDB']['database'])
 #####
-
-import time
 
 # dictates how columns will be mapped to key/fields in InfluxDB
 SCHEMA = {
