@@ -3,7 +3,7 @@ import os
 import sys
 import time
 from influxdb import InfluxDBClient
-import MySQLdb
+import pymysql
 
 # Load DB Settings
 database_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "database.json")
@@ -15,13 +15,20 @@ f = open(database_file, 'r')
 db = f.read()
 f.close()
 db = json.loads(db)
-print(db)
 
-MYSQL_CONNECTION = MySQLdb.connect(host = db['MySQL']['host'],
+try:
+    MYSQL_CONNECTION = pymysql.connect(host = db['MySQL']['host'],
                                    port = db['MySQL']['port'],
-                                   use = db['MySQL']['user'],
-                                   passwd = db['MySQL']['password'],
+                                    user = db['MySQL']['user'],
+                                    password = db['MySQL']['password'],
                                    db = db['MySQL']['database'])
+except pymysql.OperationalError as error:
+    print (error)
+    sys.exit(1)
+except Exception as ex:
+    print("MySQL connection error")
+    print(ex)
+    sys.exit(1)
 
 
 INFLUXDB_CONNECTION = InfluxDBClient(host = db['InfluxDB']['host'],
