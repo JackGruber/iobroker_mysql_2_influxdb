@@ -32,6 +32,8 @@ except Exception as ex:
 
 
 INFLUXDB_CONNECTION = InfluxDBClient(host = db['InfluxDB']['host'],
+                                     ssl = db['InfluxDB']['ssl'],
+                                     verify_ssl=True,
                                      port = db['InfluxDB']['port'],
                                      username = db['InfluxDB']['user'],
                                      password = db['InfluxDB']['password'],

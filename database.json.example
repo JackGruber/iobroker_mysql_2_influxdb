@@ -8,6 +8,7 @@
   },
   "InfluxDB": {
     "host": "localhost",
+    "ssl": false,
     "port": 8086,
     "database": "iobroker",
     "user": "xxxx",
