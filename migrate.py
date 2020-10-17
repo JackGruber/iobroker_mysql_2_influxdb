@@ -36,7 +36,20 @@ INFLUXDB_CONNECTION = InfluxDBClient(host = db['InfluxDB']['host'],
                                      username = db['InfluxDB']['user'],
                                      password = db['InfluxDB']['password'],
                                      database = db['InfluxDB']['database'])
-#####
+
+# Select datapoints
+if len(sys.argv) > 1 and sys.argv[1].upper == "ALL":
+    MIGRATE_DATAPOINT = ""
+    print("Migrate ALL datapoints ...")
+elif len(sys.argv) == 2:
+    MIGRATE_DATAPOINT = " AND name LIKE '" + sys.argv[1] + "' "
+    print("Migrate '" + sys.argv[1] + "' datapoint(s) ...")
+else:
+    print("To migrate all datapoints run '" + sys.argv[0] + " ALL'")
+    print("To migrate one datapoints run '" + sys.argv[0] + " <DATAPONTNAME>'")
+    print("To migrate a set of datapoints run '" + sys.argv[0] + ' "hm-rega.0.%"' + "'")
+    sys.exit(1)
+print("")
 
 # dictates how columns will be mapped to key/fields in InfluxDB
 SCHEMA = {
@@ -69,7 +82,7 @@ def generate_influx_points(records):
     return influx_points
 
 def query_metrics(table):
-    MYSQL_CURSOR.execute("SELECT name, id FROM datapoints WHERE id IN(SELECT DISTINCT id FROM " + table + ")")
+    MYSQL_CURSOR.execute("SELECT name, id FROM datapoints WHERE id IN(SELECT DISTINCT id FROM " + table + ")" + MIGRATE_DATAPOINT)
     rows = MYSQL_CURSOR.fetchall()
     print('Total metrics in ' + table + ": " + str(MYSQL_CURSOR.rowcount))
     return rows
