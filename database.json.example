@@ -13,6 +13,7 @@
     "database": "iobroker",
     "retention_policy": "autogen",
     "user": "xxxx",
-    "password": "xxxx"
+    "password": "xxxx",
+    "store_ack_boolean": true
   }
 }
