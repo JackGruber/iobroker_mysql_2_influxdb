@@ -73,7 +73,12 @@ def generate_influx_points(records):
         #for tag_label in SCHEMA['columns_to_tags']:
         #   tags[tag_label] = record[tag_label]
         for field_label in SCHEMA['columns_to_fields']:
+            if db['InfluxDB']['store_ack_boolean'] == True:
+                if field_label == "ack":
+                    record[field_label] = bool(record[field_label])
+
             fields[field_label] = record[field_label]
+
         influx_points.append({
             "measurement": record[SCHEMA['table_name_to_measurement']],
             #"tags": tags,
