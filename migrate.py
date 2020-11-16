@@ -40,7 +40,7 @@ INFLUXDB_CONNECTION = InfluxDBClient(host = db['InfluxDB']['host'],
                                      database = db['InfluxDB']['database'])
 
 # Select datapoints
-if len(sys.argv) > 1 and sys.argv[1].upper == "ALL":
+if len(sys.argv) > 1 and sys.argv[1].upper().strip() == "ALL":
     MIGRATE_DATAPOINT = ""
     print("Migrate ALL datapoints ...")
 elif len(sys.argv) == 2:
