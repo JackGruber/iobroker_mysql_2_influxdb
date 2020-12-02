@@ -115,7 +115,7 @@ def migrate_datapoints(table):
     processed_rows = 0
     for metric in metrics:
         metric_nr += 1
-        print(metric['name'] + " (" + str(metric_nr) + "/" + str(metric_count) + ")")
+        print(metric['name'] + "(ID: " + str(metric['id']) + ")" + " (" + str(metric_nr) + "/" + str(metric_count) + ")")
         
         start_row = 0
         processed_rows = 0
