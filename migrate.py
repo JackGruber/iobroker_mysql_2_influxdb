@@ -14,7 +14,17 @@ if not os.path.exists(database_file):
 f = open(database_file, 'r')
 db = f.read()
 f.close()
-db = json.loads(db)
+
+try:
+    db = json.loads(db)
+except json.decoder.JSONDecodeError as ex:
+    print(database_file + "Json is not valid!")
+    print(ex)
+    sys.exit(1)
+except Exception as ex:
+    print("Unhandeld Exception")
+    print(ex)
+    sys.exit(1)
 
 try:
     MYSQL_CONNECTION = pymysql.connect(host = db['MySQL']['host'],
@@ -136,7 +146,8 @@ def migrate_datapoints(table):
                 migrated_datapoints += len(selected_rows)
 
                 try:
-                    INFLUXDB_CONNECTION.write_points(generate_influx_points(selected_rows),retention_policy=db['InfluxDB']['retention_policy'])
+                    pass
+                    #INFLUXDB_CONNECTION.write_points(generate_influx_points(selected_rows),retention_policy=db['InfluxDB']['retention_policy'])
                 except Exception as ex:
                     print("InfluxDB error")
                     print(ex)
