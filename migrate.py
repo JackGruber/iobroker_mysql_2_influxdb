@@ -89,7 +89,10 @@ def generate_influx_points(records):
         for field_label in SCHEMA['columns_to_fields']:
             if db['InfluxDB']['store_ack_boolean'] == True:
                 if field_label == "ack":
-                    record[field_label] = bool(record[field_label])
+                    if (record[field_label] == 1 or record[field_label] == "True" or record[field_label] == True):
+                        record[field_label] = True
+                    else:
+                        record[field_label] = False
 
             fields[field_label] = record[field_label]
 
