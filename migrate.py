@@ -2,8 +2,14 @@ import json
 import os
 import sys
 import time
-from influxdb import InfluxDBClient
-import pymysql
+
+try:
+    from influxdb import InfluxDBClient
+    import pymysql
+except Exception as ex:
+    print(ex)
+    print("Please install all requirements!")
+    sys.exit(1)
 
 # Load DB Settings
 database_file = os.path.join(os.path.dirname(
