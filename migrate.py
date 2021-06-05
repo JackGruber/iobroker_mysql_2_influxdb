@@ -11,6 +11,11 @@ except Exception as ex:
     print("Please install all requirements!")
     sys.exit(1)
 
+if not sys.version_info >= (3, 6):
+    print("Python version to old!")
+    print(sys.version)
+    sys.exit(1)
+
 # Load DB Settings
 database_file = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), "database.json")
