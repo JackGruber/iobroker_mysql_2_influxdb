@@ -86,11 +86,12 @@ SCHEMA = {
     "table_name_to_measurement": "name",
 }
 
+DATATYPES = ["float", "string", "boolean"]
 
 #####
 # Generates an collection of influxdb points from the given SQL records
 #####
-def generate_influx_points(records):
+def generate_influx_points(datatype, records):
     influx_points = []
     for record in records:
         #tags = {},
@@ -106,6 +107,15 @@ def generate_influx_points(records):
                         record[field_label] = False
 
             fields[field_label] = record[field_label]
+            
+            # Daten in richtigen Typ wandeln
+            if field_label == "value":
+                if datatype == 0: # ts_number
+                    fields["value"] = float(record["value"])
+                elif datatype == 1: # ts_string
+                    fields["value"] = str(record["value"])
+                elif datatype == 2: # ts_bool
+                    fields["value"] = bool(record["value"])
 
         influx_points.append({
             "measurement": record[SCHEMA['table_name_to_measurement']],
@@ -119,7 +129,7 @@ def generate_influx_points(records):
 
 def query_metrics(table):
     MYSQL_CURSOR.execute(
-        "SELECT name, id FROM datapoints WHERE id IN(SELECT DISTINCT id FROM " + table + ")" + MIGRATE_DATAPOINT)
+        "SELECT name, id, type FROM datapoints WHERE id IN(SELECT DISTINCT id FROM " + table + ")" + MIGRATE_DATAPOINT)
     rows = MYSQL_CURSOR.fetchall()
     print('Total metrics in ' + table + ": " + str(MYSQL_CURSOR.rowcount))
     return rows
@@ -136,7 +146,7 @@ def migrate_datapoints(table):
     processed_rows = 0
     for metric in metrics:
         metric_nr += 1
-        print(metric['name'] + "(ID: " + str(metric['id']) + ")" +
+        print(metric['name'] + "(ID: " + str(metric['id']) + ", type: " + DATATYPES[metric['type']] + ")" +
               " (" + str(metric_nr) + "/" + str(metric_count) + ")")
 
         start_row = 0
@@ -169,7 +179,7 @@ def migrate_datapoints(table):
                 migrated_datapoints += len(selected_rows)
 
                 try:
-                    INFLUXDB_CONNECTION.write_points(generate_influx_points(
+                    INFLUXDB_CONNECTION.write_points(generate_influx_points(metric['type'], 
                         selected_rows), retention_policy=db['InfluxDB']['retention_policy'])
                 except Exception as ex:
                     print("InfluxDB error")
