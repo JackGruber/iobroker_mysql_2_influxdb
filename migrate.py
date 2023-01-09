@@ -156,7 +156,7 @@ def migrate_datapoints(table):
                                 m.ack AS 'ack',
                                 (m.q*1.0) AS 'q',
                                 s.name AS "from",
-                                (m.val*1.0) AS 'value',
+                                m.val AS 'value',
                                 (m.ts*1000000) AS'time'
                                 FROM """ + table + """ AS m
                                 LEFT JOIN datapoints AS d ON m.id=d.id
